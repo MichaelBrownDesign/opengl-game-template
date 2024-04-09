@@ -21,4 +21,11 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 	set_property(TARGET open-gl-game PROPERTY CXX_EXTENSIONS Off)
 endif()
 
+target_link_libraries(open-gl-game 
+	PUBLIC
+	GLEW::GLEW
+	SDL2::SDL2main
+	imgui::imgui
+)
+
 # TODO: Add tests and install targets if needed.
