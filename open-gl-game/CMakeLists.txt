@@ -3,6 +3,8 @@
 #
 
 find_package(GLEW REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 # Add source to this project's executable.
 add_executable (open-gl-game "main.cpp" )
