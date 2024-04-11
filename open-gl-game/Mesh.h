@@ -6,20 +6,46 @@
 
 namespace gfx
 {
-	struct Vertex
-	{
-		glm::vec3 position;
-		glm::vec2 uv;
-	};
-
 	class MeshData
 	{
 	public:
 		std::optional<std::vector<glm::vec3>>	vertices;
 		std::optional<std::vector<glm::vec3>>	normals;
-		std::optional<std::vector<glm::vec4>>	colors;
 		std::optional<std::vector<glm::vec2>>	uvs;
+		std::optional<std::vector<glm::vec4>>	colors;
 		std::optional<std::vector<GLuint>>		indices;
+
+		inline unsigned int vertexSize() const
+		{
+			unsigned int size = 0;
+			if (vertices.has_value())	size += sizeof(glm::vec3);
+			if (normals.has_value())	size += sizeof(glm::vec3);
+			if (colors.has_value())		size += sizeof(glm::vec4);
+			if (uvs.has_value())		size += sizeof(glm::vec2);
+			return size;
+		}
+
+		inline int vertexCount() const
+		{
+			const int vertexCount = vertices.has_value() ? vertices.value().size() : 0;
+			const int normalsCount = normals.has_value() ? normals.value().size() : 0;
+			const int colorsCount = colors.has_value() ? colors.value().size() : 0;
+			const int uvCount = uvs.has_value() ? uvs.value().size() : 0;
+			return std::max({ vertexCount, normalsCount, colorsCount, uvCount });
+		}
+
+		inline bool validAttributeCount() const
+		{
+			const int vertexCount	= vertices.has_value() ? vertices.value().size() : 0;
+			const int normalsCount	= normals.has_value() ? normals.value().size() : 0;
+			const int colorsCount	= colors.has_value() ? colors.value().size() : 0;
+			const int uvCount		= uvs.has_value() ? uvs.value().size() : 0;
+			const int max			= std::max({ vertexCount, normalsCount, colorsCount, uvCount });
+			return	(vertexCount == 0 || vertexCount == max) &&
+					(normalsCount == 0 || normalsCount == max) &&
+					(colorsCount == 0 || colorsCount == max) &&
+					(uvCount == 0 || uvCount == max);
+		}
 	};
 
 	class Mesh
@@ -57,8 +83,7 @@ namespace gfx
 		inline bool hasIndices() const { return ibo != 0; }
 	};
 
-	Mesh CreateMesh(const std::vector<Vertex>& vertices);
-	Mesh CreateMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+	Mesh CreateMesh(const MeshData& meshData, bool interleaved = true);
 	void DeleteMesh(Mesh& mesh);
 	void DrawMesh(const Mesh& mesh);
 }
