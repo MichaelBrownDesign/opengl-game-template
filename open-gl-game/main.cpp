@@ -119,22 +119,34 @@ void process_events()
 
 void begin_game()
 {
-	shader = gfx::CompileShader(gfx::default_shader_source);
+	shader = gfx::CompileShader(gfx::default_unlit_color);
 
-	std::vector<gfx::Vertex> vertices(4);
-	vertices[0].position = glm::vec3(0, 0, 0);
-	vertices[1].position = glm::vec3(0, 1, 0);
-	vertices[2].position = glm::vec3(1, 1, 0);
-	vertices[3].position = glm::vec3(1, 0, 0);
+	std::vector<glm::vec3> vertices(4);
+	std::vector<GLuint> indices(6);
+	vertices[0] = glm::vec3(0, 0, 0);
+	vertices[1] = glm::vec3(0, 1, 0);
+	vertices[2] = glm::vec3(1, 1, 0);
+	vertices[3] = glm::vec3(1, 0, 0);
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+	indices[3] = 2;
+	indices[4] = 3;
+	indices[5] = 0;
 
-	mesh = gfx::CreateMesh(vertices);
+	gfx::MeshData meshData{};
+	meshData.vertices = vertices;
+	meshData.indices = indices;
 
-	projection = glm::perspective(	glm::radians(fieldOfView),					// The vertical Field of View, in radians: the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)
-									(float) windowWidth / (float) windowHeight,	// Aspect Ratio. Depends on the size of your window. Notice that 4/3 == 800/600 == 1280/960, sounds familiar?
+
+	mesh = gfx::CreateMesh(meshData, false);
+
+	projection = glm::perspective(	glm::radians(fieldOfView),					// The vertical Field of View in radians (the amount of "zoom").
+									(float) windowWidth / (float) windowHeight,	// Aspect Ratio.
 									nearPlane,									// Near clipping plane. Keep as big as possible, or you'll get precision issues.
 									farPlane);									// Far clipping plane. Keep as little as possible.
 
-	view = glm::identity<glm::mat4>();
+	view = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0, -5));
 	model = glm::identity<glm::mat4>();
 	auto attribs = gfx::GetShaderVertexAttributes(shader);
 
@@ -152,7 +164,7 @@ void end_game()
 
 void game_loop(SDL_Window* window)
 {
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	begin_game();
 
@@ -161,11 +173,15 @@ void game_loop(SDL_Window* window)
 		process_events();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
 		gfx::UseShader(shader);
+		model = glm::rotate(glm::identity<glm::mat4>(), (float)((SDL_GetTicks() / 100) % 360), glm::vec3(0.f, 1.f, 0.f));
 		glm::mat4 mvp = projection * view * model;
-		GLint location = gfx::GetShaderUniformLocation(shader, "mvp");
-		glUniformMatrix4fv(location, 1, GL_FALSE, &mvp[0][0]);
+		GLint mvpLocation = gfx::GetShaderUniformLocation(shader, "mvp");
+		GLint colorLocation = gfx::GetShaderUniformLocation(shader, "color");
+		glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+		glm::vec4 color(0.f, 1.f, 0.f, 1.f);
+		glUniform4fv(colorLocation, 1, &color[0]);
 		gfx::DrawMesh(mesh);
 
 		SDL_GL_SwapWindow(window);
