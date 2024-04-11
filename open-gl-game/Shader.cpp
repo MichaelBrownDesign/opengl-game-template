@@ -6,7 +6,7 @@ namespace gfx
 {
 	std::hash<std::string> string_hash;
 
-	ShaderSource default_shader_source =
+	ShaderSource default_unlit_texture =
 	{
 		"#version 330 core \n"
 		"layout(location = 0) in vec3 position; \n"
@@ -35,6 +35,29 @@ namespace gfx
 		"fragment = texture(textureMap, fs_in.uv); \n"
 		"if(fragment.a < 0.5) discard; \n"
 		//"fragment = vec4(1,0,0,1); \n"
+		"} \n"
+	};
+
+	ShaderSource default_unlit_color =
+	{
+		"#version 330 core \n"
+		"layout(location = 0) in vec3 position; \n"
+		"uniform mat4 mvp; \n"
+		""
+		"void main() { \n"
+		"gl_Position = mvp * vec4(position, 1.0); \n"
+		"}",
+
+		std::optional<std::string>(),
+		std::optional<std::string>(),
+		std::optional<std::string>(),
+
+		"#version 330 core \n"
+		"uniform vec4 color; \n"
+		"out vec4 fragment; \n"
+		"void main() { \n"
+		"fragment = color; \n"
+		"if(fragment.a < 0.5) discard; \n"
 		"} \n"
 	};
 

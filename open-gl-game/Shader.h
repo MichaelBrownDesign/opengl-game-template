@@ -35,7 +35,8 @@ namespace gfx
 		std::string	name;
 	};
 
-	extern ShaderSource default_shader_source;
+	extern ShaderSource default_unlit_texture;
+	extern ShaderSource default_unlit_color;
 
 	typedef unsigned int ShaderHandle;
 
