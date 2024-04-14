@@ -61,6 +61,40 @@ namespace gfx
 		"} \n"
 	};
 
+	ShaderSource default_lit_color =
+	{
+		"#version 330 core \n"
+		"layout(location = 0) in vec3 position; \n"
+		"layout(location = 1) in vec3 normal; \n"
+		"uniform mat4 mvp; \n"
+		"uniform mat4 model; \n"
+		"out VS_OUT{ \n"
+		"vec3 normal;\n"
+		"} vs_out;\n"
+		"void main() { \n"
+		"vs_out.normal = normalize(vec3(model * vec4(normal, 0.0)));\n"
+		"gl_Position = mvp * vec4(position, 1.0); \n"
+		"}",
+
+		std::optional<std::string>(),
+		std::optional<std::string>(),
+		std::optional<std::string>(),
+
+		"#version 330 core \n"
+		"uniform vec4 color; \n"
+		"uniform vec3 lightDir; \n"
+		"in VS_OUT{ \n"
+		"vec3 normal; \n"
+		"} fs_in; \n"
+		"out vec4 fragment; \n"
+		"void main() { \n"
+		"float ndl = dot(fs_in.normal, lightDir); \n"
+		"fragment = vec4(color.rgb * ndl, color.a); \n"
+		//"fragment = vec4(fs_in.normal.rgb, color.a); \n"
+		"if(fragment.a < 0.5) discard; \n"
+		"} \n"
+	};
+
 	bool compile_shader_source(GLenum type, GLsizei count, const std::string& source, GLuint& shaderHandle)
 	{
 		shaderHandle = glCreateShader(type);

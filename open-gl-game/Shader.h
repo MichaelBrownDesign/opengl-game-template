@@ -37,6 +37,7 @@ namespace gfx
 
 	extern ShaderSource default_unlit_texture;
 	extern ShaderSource default_unlit_color;
+	extern ShaderSource default_lit_color;
 
 	typedef unsigned int ShaderHandle;
 
