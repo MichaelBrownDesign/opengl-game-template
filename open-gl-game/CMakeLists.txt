@@ -7,7 +7,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 # Add source to this project's executable.
-add_executable (open-gl-game "main.cpp"  "Shader.cpp" "Mesh.cpp")
+add_executable (open-gl-game "main.cpp"  "Shader.cpp" "Mesh.cpp" "Primitives.cpp" "Camera.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET open-gl-game PROPERTY CXX_STANDARD 20)
