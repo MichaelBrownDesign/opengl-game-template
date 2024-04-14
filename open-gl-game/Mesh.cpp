@@ -13,7 +13,7 @@ namespace gfx
 		const auto vertexCount = meshData.vertexCount();
 
 		// Size of the vertex buffer
-		const unsigned int bufferSize = vertexSize * vertexCount;
+		const size_t bufferSize = vertexSize * vertexCount;
 
 		char* vertexData = new char[bufferSize];
 
@@ -97,7 +97,7 @@ namespace gfx
 
 		char* vertexData = new char[bufferSize];
 
-		int offset = 0;
+		size_t offset = 0;
 		if (meshData.vertices.has_value())
 		{
 			memcpy(&vertexData[offset], &meshData.vertices.value()[0], sizeof(glm::vec3) * vertexCount);

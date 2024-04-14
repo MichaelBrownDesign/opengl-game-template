@@ -25,22 +25,22 @@ namespace gfx
 			return size;
 		}
 
-		inline int vertexCount() const
+		inline size_t vertexCount() const
 		{
-			const int vertexCount = vertices.has_value() ? vertices.value().size() : 0;
-			const int normalsCount = normals.has_value() ? normals.value().size() : 0;
-			const int colorsCount = colors.has_value() ? colors.value().size() : 0;
-			const int uvCount = uvs.has_value() ? uvs.value().size() : 0;
+			const size_t vertexCount = vertices.has_value() ? vertices.value().size() : 0;
+			const size_t normalsCount = normals.has_value() ? normals.value().size() : 0;
+			const size_t colorsCount = colors.has_value() ? colors.value().size() : 0;
+			const size_t uvCount = uvs.has_value() ? uvs.value().size() : 0;
 			return std::max({ vertexCount, normalsCount, colorsCount, uvCount });
 		}
 
 		inline bool validAttributeCount() const
 		{
-			const int vertexCount	= vertices.has_value() ? vertices.value().size() : 0;
-			const int normalsCount	= normals.has_value() ? normals.value().size() : 0;
-			const int colorsCount	= colors.has_value() ? colors.value().size() : 0;
-			const int uvCount		= uvs.has_value() ? uvs.value().size() : 0;
-			const int max			= std::max({ vertexCount, normalsCount, colorsCount, uvCount });
+			const size_t vertexCount	= vertices.has_value() ? vertices.value().size() : 0;
+			const size_t normalsCount	= normals.has_value() ? normals.value().size() : 0;
+			const size_t colorsCount	= colors.has_value() ? colors.value().size() : 0;
+			const size_t uvCount		= uvs.has_value() ? uvs.value().size() : 0;
+			const size_t max			= std::max({ vertexCount, normalsCount, colorsCount, uvCount });
 			return	(vertexCount == 0 || vertexCount == max) &&
 					(normalsCount == 0 || normalsCount == max) &&
 					(colorsCount == 0 || colorsCount == max) &&
@@ -54,8 +54,8 @@ namespace gfx
 		GLuint vao;
 		GLuint vbo;
 		GLuint ibo;
-		GLuint vertexCount;
-		GLuint indexCount;
+		size_t vertexCount;
+		size_t indexCount;
 
 		Mesh() :
 			vao(0),
@@ -64,14 +64,14 @@ namespace gfx
 			indexCount(0)
 		{}
 
-		Mesh(GLuint vao, GLuint vbo, GLuint vertexCount) :
+		Mesh(GLuint vao, GLuint vbo, size_t vertexCount) :
 			vao(vao),
 			vbo(vbo),
 			vertexCount(vertexCount),
 			indexCount(0)
 		{}
 
-		Mesh(GLuint vao, GLuint vbo, GLuint ibo, GLuint vertexCount, GLuint indexCount) :
+		Mesh(GLuint vao, GLuint vbo, GLuint ibo, size_t vertexCount, size_t indexCount) :
 			vao(vao),
 			vbo(vbo),
 			ibo(ibo),
